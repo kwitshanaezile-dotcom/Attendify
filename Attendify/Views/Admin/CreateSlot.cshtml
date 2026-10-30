@@ -1,0 +1,89 @@
+﻿@model Attendify.Models.CreateSlotViewModel
+@{
+    ViewData["Title"] = "Add weekly slot";
+}
+
+<h2 class="fw-bold mb-4">Add weekly slot</h2>
+
+<div class="card shadow-sm border-0" style="border-radius:16px; max-width:760px;">
+    <div class="card-body p-4">
+        <p class="text-muted">
+            Enter the slot once. Attendify creates a dated class for every matching weekday
+            between the two dates, so lecturers can open attendance on each one.
+        </p>
+
+        <form asp-action="CreateSlot" method="post">
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+            <div class="row g-3">
+                <div class="col-12">
+                    <label asp-for="ModuleId" class="form-label">Module</label>
+                    <select asp-for="ModuleId" asp-items="Model.Modules" class="form-select">
+                        <option value="">Select a module…</option>
+                    </select>
+                    <span asp-validation-for="ModuleId" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6">
+                    <label asp-for="VenueId" class="form-label">Venue</label>
+                    <select asp-for="VenueId" asp-items="Model.Venues" class="form-select">
+                        <option value="">Select a venue…</option>
+                    </select>
+                    <span asp-validation-for="VenueId" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6">
+                    <label asp-for="Day" class="form-label">Day of the week</label>
+                    <select asp-for="Day" class="form-select">
+                        <option value="">Select a day…</option>
+                        <option value="Monday">Monday</option>
+                        <option value="Tuesday">Tuesday</option>
+                        <option value="Wednesday">Wednesday</option>
+                        <option value="Thursday">Thursday</option>
+                        <option value="Friday">Friday</option>
+                        <option value="Saturday">Saturday</option>
+                        <option value="Sunday">Sunday</option>
+                    </select>
+                    <span asp-validation-for="Day" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label" for="StartTime">Start time</label>
+                    <input type="time" id="StartTime" name="StartTime" class="form-control"
+                           value="@Model.StartTime?.ToString(@"hh\:mm")" />
+                    <span asp-validation-for="StartTime" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label" for="EndTime">End time</label>
+                    <input type="time" id="EndTime" name="EndTime" class="form-control"
+                           value="@Model.EndTime?.ToString(@"hh\:mm")" />
+                    <span asp-validation-for="EndTime" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label" for="FromDate">First date</label>
+                    <input type="date" id="FromDate" name="FromDate" class="form-control"
+                           value="@Model.FromDate?.ToString("yyyy-MM-dd")" />
+                    <span asp-validation-for="FromDate" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label" for="ToDate">Last date</label>
+                    <input type="date" id="ToDate" name="ToDate" class="form-control"
+                           value="@Model.ToDate?.ToString("yyyy-MM-dd")" />
+                    <span asp-validation-for="ToDate" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="mt-4 d-flex gap-2">
+                <button type="submit" class="btn btn-primary px-4">Create classes</button>
+                <a asp-action="Sessions" class="btn btn-outline-primary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,61 @@
+﻿@model Attendify.Models.EditUserViewModel
+@{ ViewData["Title"] = "Edit user"; }
+
+<h2 class="fw-bold mb-4">Edit user</h2>
+
+@if (TempData["Success"] != null) { <div class="alert alert-success">@TempData["Success"]</div> }
+@if (TempData["Error"] != null) { <div class="alert alert-warning">@TempData["Error"]</div> }
+
+<div class="card shadow-sm border-0" style="border-radius:16px; max-width:760px;">
+    <div class="card-body p-4">
+        <form asp-action="EditUser" method="post">
+            <input type="hidden" asp-for="PersonId" />
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="form-label">Role</label>
+                    <input class="form-control bg-light" value="@Model.Role" readonly />
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Username</label>
+                    <input class="form-control bg-light" value="@Model.Username" readonly />
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="FirstName" class="form-label">First name</label>
+                    <input asp-for="FirstName" class="form-control" />
+                    <span asp-validation-for="FirstName" class="text-danger"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="LastName" class="form-label">Last name</label>
+                    <input asp-for="LastName" class="form-control" />
+                    <span asp-validation-for="LastName" class="text-danger"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="Email" class="form-label">Email</label>
+                    <input asp-for="Email" class="form-control" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="PhoneNumber" class="form-label">Phone number</label>
+                    <input asp-for="PhoneNumber" class="form-control" />
+                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                </div>
+            </div>
+
+            <hr class="my-4" />
+            <div class="col-md-6 p-0">
+                <label asp-for="NewPassword" class="form-label">Reset password (leave blank to keep the current one)</label>
+                <input asp-for="NewPassword" class="form-control" autocomplete="new-password" />
+                <span asp-validation-for="NewPassword" class="text-danger"></span>
+            </div>
+
+            <div class="mt-4 d-flex gap-2">
+                <button type="submit" class="btn btn-primary px-4">Save changes</button>
+                <a asp-action="Users" class="btn btn-outline-primary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

@@ -1,0 +1,47 @@
+﻿@model Attendify.Models.EnrollViewModel
+@{ ViewData["Title"] = "Manage students"; }
+
+<h2 class="fw-bold mb-1">Manage students</h2>
+<div class="text-muted mb-4">@Model.ModuleCode · @Model.ModuleName</div>
+
+<form asp-action="EnrollStudents" asp-route-id="@Model.ModuleId" method="post">
+    <div class="card shadow-sm border-0 mb-3" style="border-radius:16px;">
+        <div class="table-responsive">
+            <table class="table align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th style="width:60px;"><input type="checkbox" id="selectAll" class="form-check-input" /></th>
+                        <th>Student number</th>
+                        <th>Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var s in Model.Students)
+                    {
+                        <tr>
+                            <td><input type="checkbox" name="studentIds" value="@s.StudentId" class="form-check-input row-check" checked="@s.Enrolled" /></td>
+                            <td>@s.StudentNumber</td>
+                            <td>@s.FullName</td>
+                        </tr>
+                    }
+                    @if (!Model.Students.Any())
+                    {
+                        <tr><td colspan="3" class="text-center text-muted py-4">No students at your institution yet.</td></tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="d-flex gap-2">
+        <button type="submit" class="btn btn-primary px-4">Save enrolments</button>
+        <a asp-action="Modules" class="btn btn-outline-primary">Cancel</a>
+    </div>
+</form>
+
+@section Scripts {
+    <script>
+        document.getElementById('selectAll').addEventListener('change', function () {
+            document.querySelectorAll('.row-check').forEach(function (c) { c.checked = document.getElementById('selectAll').checked; });
+        });
+    </script>
+}

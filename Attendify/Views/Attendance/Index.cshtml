@@ -1,0 +1,39 @@
+﻿@model List<Attendify.Models.LiveSessionItem>
+@{
+    ViewData["Title"] = "Mark Attendance";
+}
+
+<h2 class="fw-bold mb-4">Mark attendance</h2>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-secondary">
+        No class is open for attendance right now. When your lecturer opens a session,
+        it will appear here.
+    </div>
+}
+else
+{
+    foreach (var s in Model)
+    {
+        <div class="live-card mb-3">
+            <div>
+                <span class="badge bg-success mb-2">● Attendance open</span>
+                <h4 class="fw-bold mb-1">@s.ModuleCode · @s.ModuleName</h4>
+                <div class="opacity-75">
+                    📍 @s.VenueName &nbsp;·&nbsp; @s.StartTime.ToString(@"hh\:mm") – @s.EndTime.ToString(@"hh\:mm")
+                </div>
+            </div>
+            <div>
+                @if (s.AlreadySignedIn)
+                {
+                    <span class="badge bg-light text-success px-3 py-2">✔ Signed in</span>
+                }
+                else
+                {
+                    <a asp-action="Mark" asp-route-id="@s.SessionId" class="btn btn-light btn-lg">Mark attendance</a>
+                }
+            </div>
+        </div>
+    }
+}

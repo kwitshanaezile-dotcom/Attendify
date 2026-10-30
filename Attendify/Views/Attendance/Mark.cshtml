@@ -1,0 +1,101 @@
+﻿@model Attendify.Models.MarkAttendanceViewModel
+@{
+    ViewData["Title"] = "Mark Attendance";
+}
+
+<div class="row justify-content-center py-4">
+    <div class="col-md-7 col-lg-5">
+        <div class="live-card flex-column align-items-start mb-4">
+            <span class="badge bg-success">● Attendance open</span>
+            <h3 class="fw-bold mb-0">@Model.ModuleCode · @Model.ModuleName</h3>
+            <div class="opacity-75">
+                📍 @Model.VenueName<br />
+                🕒 @Model.StartTime.ToString(@"hh\:mm") – @Model.EndTime.ToString(@"hh\:mm")<br />
+                Allowed distance: @((int)Model.AllowedRadius) m
+            </div>
+        </div>
+
+        <div class="card shadow-sm border-0" style="border-radius:16px;">
+            <div class="card-body p-4 text-center">
+                <p class="text-muted">
+                    Attendify will check that you are at the venue. Your browser will ask
+                    for permission to use your location, so choose <strong>Allow</strong>.
+                </p>
+
+                <form id="signinForm">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" id="sessionId" value="@Model.SessionId" />
+                    <button type="button" id="verifyBtn" class="btn btn-primary btn-lg w-100">
+                        Verify location &amp; sign in
+                    </button>
+                </form>
+
+                <div id="result" class="mt-3"></div>
+
+                <a asp-controller="Dashboard" asp-action="Student" class="btn btn-link mt-2">Back to dashboard</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+    const btn = document.getElementById('verifyBtn');
+    const result = document.getElementById('result');
+
+    function show(type, text) {
+        result.innerHTML = '<div class="alert alert-' + type + ' mb-0">' + text + '</div>';
+    }
+
+    btn.addEventListener('click', function () {
+        if (!navigator.geolocation) {
+            show('danger', 'Your browser does not support location services.');
+            return;
+        }
+
+        btn.disabled = true;
+        show('info', 'Getting your location…');
+
+        navigator.geolocation.getCurrentPosition(async function (pos) {
+            const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+
+            try {
+                const response = await fetch('@Url.Action("SignIn", "Attendance")', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'RequestVerificationToken': token
+                    },
+                    body: JSON.stringify({
+                        sessionId: parseInt(document.getElementById('sessionId').value),
+                        latitude: pos.coords.latitude,
+                        longitude: pos.coords.longitude
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    show('success', '✔ ' + data.message);
+                    setTimeout(function () {
+                        window.location.href = '@Url.Action("Student", "Dashboard")';
+                    }, 2000);
+                } else {
+                    show('danger', data.message);
+                    btn.disabled = false;
+                }
+            } catch (e) {
+                show('danger', 'Something went wrong. Please try again.');
+                btn.disabled = false;
+            }
+        }, function (err) {
+            let msg = 'Could not get your location.';
+            if (err.code === 1) msg = 'Location permission was denied. Allow location access for this site and try again.';
+            if (err.code === 2) msg = 'Your location is unavailable right now. Try again.';
+            if (err.code === 3) msg = 'Getting your location timed out. Try again.';
+            show('danger', msg);
+            btn.disabled = false;
+        }, { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 });
+    });
+</script>
+}

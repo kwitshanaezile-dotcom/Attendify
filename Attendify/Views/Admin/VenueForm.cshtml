@@ -1,0 +1,45 @@
+﻿@model Attendify.Models.VenueFormViewModel
+@{ ViewData["Title"] = Model.VenueId == 0 ? "Add venue" : "Edit venue"; }
+
+<h2 class="fw-bold mb-4">@ViewData["Title"]</h2>
+
+<div class="card shadow-sm border-0" style="border-radius:16px; max-width:640px;">
+    <div class="card-body p-4">
+        <p class="text-muted">
+            Tip: stand in the venue, open Google Maps, press and hold on your position,
+            and copy the latitude and longitude it shows.
+        </p>
+        <form asp-action="VenueForm" method="post">
+            <input type="hidden" asp-for="VenueId" />
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+            <div class="row g-3">
+                <div class="col-12">
+                    <label asp-for="VenueName" class="form-label">Venue name</label>
+                    <input asp-for="VenueName" class="form-control" />
+                    <span asp-validation-for="VenueName" class="text-danger"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="Latitude" class="form-label">Latitude</label>
+                    <input asp-for="Latitude" type="number" step="any" class="form-control" />
+                    <span asp-validation-for="Latitude" class="text-danger"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="Longitude" class="form-label">Longitude</label>
+                    <input asp-for="Longitude" type="number" step="any" class="form-control" />
+                    <span asp-validation-for="Longitude" class="text-danger"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="AllowedRadius" class="form-label">Allowed radius (metres)</label>
+                    <input asp-for="AllowedRadius" type="number" step="any" class="form-control" />
+                    <span asp-validation-for="AllowedRadius" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="mt-4 d-flex gap-2">
+                <button type="submit" class="btn btn-primary px-4">Save venue</button>
+                <a asp-action="Venues" class="btn btn-outline-primary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

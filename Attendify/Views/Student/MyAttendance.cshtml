@@ -1,0 +1,79 @@
+﻿@model Attendify.Models.MyAttendanceViewModel
+@{
+    ViewData["Title"] = "My Attendance";
+}
+
+<h2 class="fw-bold mb-4">My attendance</h2>
+
+<div class="row g-3 mb-4">
+    @foreach (var s in Model.Summaries)
+    {
+        var bar = s.Rate >= 70 ? "bg-success" : s.Rate >= 50 ? "bg-warning" : "bg-danger";
+        <div class="col-md-4">
+            <div class="stat-card text-start">
+                <div class="text-primary fw-bold">@s.ModuleCode</div>
+                <div class="small text-muted mb-2">@s.ModuleName</div>
+                <div class="d-flex justify-content-between align-items-end">
+                    <div class="stat-value">@s.Rate%</div>
+                    <div class="small text-muted">@s.Attended of @s.Held classes</div>
+                </div>
+                <div class="progress mt-2" style="height:6px;">
+                    <div class="progress-bar @bar" style="width:@s.Rate%"></div>
+                </div>
+            </div>
+        </div>
+    }
+    @if (!Model.Summaries.Any())
+    {
+        <div class="col-12"><div class="alert alert-secondary mb-0">No classes have been held yet.</div></div>
+    }
+</div>
+
+<form method="get" class="d-flex align-items-center gap-2 mb-3">
+    <label for="module" class="fw-semibold mb-0">Module:</label>
+    <select id="module" name="module" class="form-select w-auto" onchange="this.form.submit()">
+        <option value="">All modules</option>
+        @foreach (var code in Model.ModuleCodes)
+        {
+            <option value="@code" selected="@(code == Model.SelectedModule)">@code</option>
+        }
+    </select>
+</form>
+
+<div class="card shadow-sm border-0" style="border-radius:16px;">
+    <div class="table-responsive">
+        <table class="table align-middle mb-0">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Module</th>
+                    <th>Venue</th>
+                    <th>Class starts</th>
+                    <th>Signed in</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var r in Model.Rows)
+                {
+                    var st = r.Status.ToLowerInvariant();
+                    var badge = st == "present" ? "bg-success"
+                              : st == "late" ? "bg-warning text-dark"
+                              : "bg-danger";
+                    <tr>
+                        <td>@r.Date.ToString("ddd, dd MMM yyyy")</td>
+                        <td><strong>@r.ModuleCode</strong></td>
+                        <td>@r.VenueName</td>
+                        <td>@r.StartTime.ToString(@"hh\:mm")</td>
+                        <td>@(r.SigninTime.HasValue ? r.SigninTime.Value.ToString("HH:mm") : "—")</td>
+                        <td><span class="badge @badge">@r.Status</span></td>
+                    </tr>
+                }
+                @if (!Model.Rows.Any())
+                {
+                    <tr><td colspan="6" class="text-center text-muted py-4">No attendance records found.</td></tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

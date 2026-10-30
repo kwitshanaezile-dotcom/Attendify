@@ -1,0 +1,123 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Attendify</title>
+    <script type="importmap"></script>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/Attendify.styles.css" asp-append-version="true" />
+</head>
+<body class="@(User.Identity?.IsAuthenticated == true ? "has-sidebar" : "")">
+@if (User.Identity?.IsAuthenticated == true)
+{
+    var controller = ViewContext.RouteData.Values["controller"]?.ToString() ?? "";
+    var action = ViewContext.RouteData.Values["action"]?.ToString() ?? "";
+    string Active(string c, string? a = null) =>
+        controller == c && (a == null || action == a) ? "active" : "";
+    string AdminActive(params string[] actions) =>
+    controller == "Admin" && actions.Contains(action) ? "active" : "";
+    
+    var role = User.IsInRole("Admin") ? "IT Administrator"
+             : User.IsInRole("Lecturer") ? "Lecturer"
+             : "Student";
+    var dashAction = User.IsInRole("Admin") ? "Admin"
+                   : User.IsInRole("Lecturer") ? "Lecturer"
+                   : "Student";
+    var institution = User.FindFirst("InstitutionName")?.Value ?? "";
+
+    <div class="app-shell">
+        <aside class="sidebar">
+            <a class="sidebar-brand" asp-controller="Dashboard" asp-action="Index">Attendify</a>
+
+            <div class="sidebar-user">
+                <div class="fw-semibold">@User.Identity.Name</div>
+                <div class="small opacity-75">@(string.IsNullOrEmpty(institution) ? role : institution + " - " + role)</div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a class="sidebar-link @Active("Dashboard")"
+                   asp-controller="Dashboard" asp-action="@dashAction">🏠 Dashboard</a>
+
+                @if (User.IsInRole("Student"))
+                {
+                    <a class="sidebar-link @Active("Attendance")"
+                       asp-controller="Attendance" asp-action="Index">📍 Mark Attendance</a>
+                    <a class="sidebar-link @Active("Student", "MyAttendance")"
+                       asp-controller="Student" asp-action="MyAttendance">📋 My Attendance</a>
+                    <a class="sidebar-link @Active("Student", "Timetable")"
+                       asp-controller="Student" asp-action="Timetable">🗓️ My Timetable</a>
+                    <a class="sidebar-link @Active("Student", "Profile")"
+                       asp-controller="Student" asp-action="Profile">👤 My Profile</a>
+                }
+
+                @if (User.IsInRole("Lecturer"))
+                {
+                    <a class="sidebar-link @Active("Lecturer", "Modules")"
+                       asp-controller="Lecturer" asp-action="Modules">📚 My Modules</a>
+                    <a class="sidebar-link @Active("Lecturer", "Sessions")"
+                       asp-controller="Lecturer" asp-action="Sessions">🗓️ Sessions</a>
+                    <a class="sidebar-link @Active("Lecturer", "Attendances")"
+                       asp-controller="Lecturer" asp-action="Attendances">📋 Attendance</a>
+                    <a class="sidebar-link @Active("Lecturer", "Reports")"
+                       asp-controller="Lecturer" asp-action="Reports">📊 Reports</a>
+                    <a class="sidebar-link @Active("Lecturer", "Profile")"
+                       asp-controller="Lecturer" asp-action="Profile">👤 My Profile</a>
+                }
+
+                @if (User.IsInRole("Admin"))
+                {
+                    <a class="sidebar-link @AdminActive("Users", "AddUser", "EditUser")"
+                       asp-controller="Admin" asp-action="Users">👥 Users</a>
+                    <a class="sidebar-link @AdminActive("Modules", "AddModule", "EnrollStudents")"
+                       asp-controller="Admin" asp-action="Modules">📚 Modules</a>
+                    <a class="sidebar-link @AdminActive("Venues", "VenueForm")"
+                       asp-controller="Admin" asp-action="Venues">📍 Venues</a>
+                    <a class="sidebar-link @AdminActive("Sessions", "CreateSlot")"
+                       asp-controller="Admin" asp-action="Sessions">🗓️ Sessions</a>
+                    <a class="sidebar-link @AdminActive("Reports")"
+                       asp-controller="Admin" asp-action="Reports">📊 Reports</a>
+                    <a class="sidebar-link @AdminActive("Profile")"
+                       asp-controller="Admin" asp-action="Profile">👤 My Profile</a>
+                 }
+            </nav>
+
+            <div class="sidebar-footer">
+                <form asp-controller="Account" asp-action="Logout" method="post">
+                    <button type="submit" class="sidebar-link sidebar-logout w-100 text-start">🚪 Log out</button>
+                </form>
+            </div>
+        </aside>
+
+        <main class="app-main" role="main">
+            @RenderBody()
+        </main>
+    </div>
+}
+else
+{
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container-fluid">
+                <a class="navbar-brand" asp-controller="Home" asp-action="Index">Attendify</a>
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link text-dark" asp-controller="Home" asp-action="Index">Home</a></li>
+                    <li class="nav-item"><a class="nav-link text-dark" asp-controller="Account" asp-action="Login">Log in</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+}
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

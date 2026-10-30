@@ -1,0 +1,46 @@
+﻿@model Attendify.Models.TimetableViewModel
+@{
+    ViewData["Title"] = "My Timetable";
+}
+
+<h2 class="fw-bold mb-4">My timetable</h2>
+
+<div class="card shadow-sm border-0" style="border-radius:16px;">
+    <div class="table-responsive">
+        <table class="table align-middle mb-0">
+            <thead>
+                <tr>
+                    <th>Day</th>
+                    <th>Start</th>
+                    <th>End</th>
+                    <th>Module</th>
+                    <th>Venue</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var r in Model.Rows)
+                {
+                    var badge = r.Status switch
+                    {
+                        "Cancelled" => "bg-danger",
+                        "Open now" => "bg-success",
+                        _ => "bg-primary"
+                    };
+                    <tr class="@(r.IsToday ? "table-primary" : "")">
+                        <td><strong>@r.Day</strong></td>
+                        <td>@r.StartTime.ToString(@"hh\:mm")</td>
+                        <td>@r.EndTime.ToString(@"hh\:mm")</td>
+                        <td>@r.ModuleCode <span class="text-muted small d-none d-md-inline">· @r.ModuleName</span></td>
+                        <td>@r.VenueName</td>
+                        <td><span class="badge @badge">@r.Status</span></td>
+                    </tr>
+                }
+                @if (!Model.Rows.Any())
+                {
+                    <tr><td colspan="6" class="text-center text-muted py-4">No classes on your timetable yet.</td></tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

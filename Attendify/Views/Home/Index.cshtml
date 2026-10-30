@@ -1,0 +1,87 @@
+﻿@{
+    ViewData["Title"] = "Welcome to Attendify";
+}
+
+<section class="hero text-center">
+    <div class="container py-5">
+        <span class="badge rounded-pill bg-light text-primary mb-3 px-3 py-2">
+            📍 Location-verified attendance
+        </span>
+        <h1 class="display-4 fw-bold mb-3">Attendify</h1>
+        <p class="lead mb-4 mx-auto" style="max-width: 640px;">
+            A digital attendance system that confirms students are physically in the
+            classroom, so registers are accurate and nobody has to sign paper.
+        </p>
+        <a asp-controller="Account" asp-action="Login" class="btn btn-light btn-lg px-5 me-2">Log in</a>
+        <a href="#how-it-works" class="btn btn-outline-light btn-lg px-4">How it works</a>
+    </div>
+</section>
+
+<section class="container py-5">
+    <div class="row g-4 text-center">
+        <div class="col-md-4">
+            <div class="card feature-card h-100 shadow-sm">
+                <div class="card-body p-4">
+                    <div class="feature-icon">🎓</div>
+                    <h5 class="card-title">Students</h5>
+                    <p class="card-text text-muted">
+                        Sign in to class from your phone, see your modules and
+                        track your attendance history.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card feature-card h-100 shadow-sm">
+                <div class="card-body p-4">
+                    <div class="feature-icon">👩‍🏫</div>
+                    <h5 class="card-title">Lecturers</h5>
+                    <p class="card-text text-muted">
+                        Manage your sessions, see who is present and
+                        view attendance reports per module.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card feature-card h-100 shadow-sm">
+                <div class="card-body p-4">
+                    <div class="feature-icon">🛠️</div>
+                    <h5 class="card-title">IT Administrators</h5>
+                    <p class="card-text text-muted">
+                        Manage users, modules, venues and the class timetable
+                        for your institution.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="how-it-works" class="bg-light py-5">
+    <div class="container">
+        <h2 class="text-center fw-bold mb-5">How attendance works</h2>
+        <div class="row g-4 text-center">
+            <div class="col-md-3">
+                <div class="step-number">1</div>
+                <h6>Log in</h6>
+                <p class="text-muted small">Sign in with your Attendify account.</p>
+            </div>
+            <div class="col-md-3">
+                <div class="step-number">2</div>
+                <h6>Open your session</h6>
+                <p class="text-muted small">Pick the class that is currently open.</p>
+            </div>
+            <div class="col-md-3">
+                <div class="step-number">3</div>
+                <h6>Share your location</h6>
+                <p class="text-muted small">Attendify checks you are inside the venue's allowed radius.</p>
+            </div>
+            <div class="col-md-3">
+                <div class="step-number">4</div>
+                <h6>Attendance recorded</h6>
+                <p class="text-muted small">You're marked Present and the record is saved.</p>
+            </div>
+        </div>
+    </div>
+</section>

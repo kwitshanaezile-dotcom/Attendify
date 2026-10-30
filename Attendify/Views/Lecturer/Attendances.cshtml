@@ -1,0 +1,92 @@
+﻿@model Attendify.Models.LecturerAttendanceViewModel
+@{
+    ViewData["Title"] = "Attendance";
+}
+
+<h2 class="fw-bold mb-4">Attendance</h2>
+
+@if (!Model.Modules.Any())
+{
+    <div class="alert alert-secondary">You have no modules assigned yet.</div>
+}
+else
+{
+    <form method="get" class="row g-2 align-items-end mb-4">
+        <div class="col-md-4">
+            <label class="form-label fw-semibold" for="moduleId">Module</label>
+            <select id="moduleId" name="moduleId" class="form-select"
+                    onchange="document.getElementById('sessionId').disabled = true; this.form.submit();">
+                @foreach (var m in Model.Modules)
+                {
+                    <option value="@m.ModuleId" selected="@(m.ModuleId == Model.SelectedModuleId)">@m.ModuleCode · @m.ModuleName</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-8">
+            <label class="form-label fw-semibold" for="sessionId">Class</label>
+            <select id="sessionId" name="sessionId" class="form-select" onchange="this.form.submit();">
+                @foreach (var s in Model.Sessions)
+                {
+                    <option value="@s.SessionId" selected="@(s.SessionId == Model.SelectedSessionId)">@s.Label</option>
+                }
+            </select>
+        </div>
+    </form>
+
+    @if (!Model.Sessions.Any())
+    {
+        <div class="alert alert-secondary">No classes have taken place for this module yet.</div>
+    }
+    else
+    {
+        @if (Model.IsLive)
+        {
+            <div class="alert alert-success py-2">
+                ● Attendance is open. This list refreshes automatically every 15 seconds.
+            </div>
+        }
+
+        <div class="row g-3 mb-4">
+            <div class="col-4"><div class="stat-card"><div class="stat-value">@Model.Present</div><div class="stat-label">Present</div></div></div>
+            <div class="col-4"><div class="stat-card"><div class="stat-value">@Model.Late</div><div class="stat-label">Late</div></div></div>
+            <div class="col-4"><div class="stat-card"><div class="stat-value">@Model.Absent</div><div class="stat-label">@(Model.IsLive ? "Not signed in" : "Absent")</div></div></div>
+        </div>
+
+        <div class="card shadow-sm border-0" style="border-radius:16px;">
+            <div class="table-responsive">
+                <table class="table align-middle mb-0">
+                    <thead>
+                        <tr><th>Student number</th><th>Name</th><th>Signed in</th><th>Status</th></tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var r in Model.Roster)
+                        {
+                            var st = r.Status.ToLowerInvariant();
+                            var badge = st == "present" ? "bg-success"
+                                      : st == "late" ? "bg-warning text-dark"
+                                      : st == "not signed in" ? "bg-secondary"
+                                      : "bg-danger";
+                            <tr>
+                                <td>@r.StudentNumber</td>
+                                <td>@r.FullName</td>
+                                <td>@(r.SigninTime.HasValue ? r.SigninTime.Value.ToString("HH:mm") : "—")</td>
+                                <td><span class="badge @badge">@r.Status</span></td>
+                            </tr>
+                        }
+                        @if (!Model.Roster.Any())
+                        {
+                            <tr><td colspan="4" class="text-center text-muted py-4">No students are enrolled in this module.</td></tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+}
+
+@section Scripts {
+    @if (Model.IsLive)
+    {
+        <script>setTimeout(function () { location.reload(); }, 15000);</script>
+    }
+}

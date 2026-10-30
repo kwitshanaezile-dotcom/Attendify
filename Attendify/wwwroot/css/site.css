@@ -1,0 +1,308 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}
+
+.form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
+  color: var(--bs-secondary-color);
+  text-align: end;
+}
+
+.form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
+  text-align: start;
+}
+.hero {
+    background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+    color: #fff;
+}
+
+.feature-card {
+    border: none;
+    border-radius: 16px;
+    transition: transform 0.2s ease;
+}
+
+    .feature-card:hover {
+        transform: translateY(-4px);
+    }
+
+.feature-icon {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.step-number {
+    width: 48px;
+    height: 48px;
+    line-height: 48px;
+    margin: 0 auto 0.75rem;
+    border-radius: 50%;
+    background: #2563eb;
+    color: #fff;
+    font-weight: 700;
+}
+.live-card {
+    background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+    color: #fff;
+    border-radius: 16px;
+    padding: 1.5rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.stat-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 1.25rem;
+    text-align: center;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+.stat-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #2563eb;
+}
+
+.stat-label {
+    color: #6b7280;
+    font-size: 0.9rem;
+}
+body.has-sidebar {
+    margin-bottom: 0;
+}
+
+.app-shell {
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar {
+    width: 250px;
+    flex-shrink: 0;
+    background: #1e3a8a;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    padding: 1.25rem 1rem;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+}
+
+.sidebar-brand {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #fff;
+    text-decoration: none;
+    padding: 0.25rem 0.75rem;
+}
+
+.sidebar-user {
+    margin: 1rem 0 0.5rem;
+    padding: 0.75rem;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-nav {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.sidebar-link {
+    display: block;
+    color: rgba(255, 255, 255, 0.8);
+    padding: 0.65rem 0.9rem;
+    border-radius: 10px;
+    text-decoration: none;
+    background: none;
+    border: none;
+}
+
+    .sidebar-link:hover {
+        background: rgba(255, 255, 255, 0.12);
+        color: #fff;
+    }
+
+    .sidebar-link.active {
+        background: #fff;
+        color: #1e3a8a;
+        font-weight: 600;
+    }
+
+.sidebar-footer {
+    margin-top: auto;
+}
+
+.app-main {
+    flex: 1;
+    min-width: 0;
+    padding: 2rem;
+    max-width: 1100px;
+}
+
+@media (max-width: 768px) {
+    .app-shell {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+        height: auto;
+        position: static;
+    }
+
+    .sidebar-footer {
+        margin-top: 1rem;
+    }
+
+    .app-main {
+        padding: 1rem;
+    }
+}
+/* ===== Attendify theme: maroon + cream (matches the Oracle version) ===== */
+:root {
+    --bs-primary: #74404d;
+    --bs-primary-rgb: 116, 64, 77;
+    --bs-link-color: #74404d;
+    --bs-link-color-rgb: 116, 64, 77;
+    --bs-link-hover-color: #42232c;
+    --bs-link-hover-color-rgb: 66, 35, 44;
+}
+
+body {
+    background-color: #f3f2f0;
+}
+
+/* Cards and tables: cream, like the Oracle regions */
+.card {
+    --bs-card-bg: #faf9f6;
+    border: 1px solid #e4e1db !important;
+}
+
+.table {
+    --bs-table-bg: transparent;
+}
+
+.table-primary {
+    --bs-table-bg: #f0e3e7;
+    --bs-table-border-color: #e3cdd3;
+    --bs-table-color: #1a1a1a;
+}
+
+/* Sidebar: dark maroon (same colour as the Oracle top bar) */
+.sidebar {
+    background: #42232c;
+}
+
+.sidebar-user {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-link.active {
+    background: #faf9f6;
+    color: #42232c;
+}
+
+/* Landing page hero */
+.hero {
+    background: linear-gradient(135deg, #42232c 0%, #74404d 100%);
+}
+
+.step-number {
+    background: #74404d;
+}
+
+/* Live session / Mark Attendance card: dark green like the Oracle hero card */
+.live-card {
+    background: linear-gradient(135deg, #1c2b27 0%, #2a4039 100%);
+}
+
+    .live-card .btn-light {
+        background: #7fc79d;
+        border-color: #7fc79d;
+        color: #12201c;
+        font-weight: 600;
+    }
+
+        .live-card .btn-light:hover {
+            background: #95d3ae;
+            border-color: #95d3ae;
+        }
+
+/* Stat cards: cream with a coloured left edge, dark numbers */
+.stat-card {
+    background: #faf9f6;
+    border: 1px solid #e4e1db;
+    border-left: 5px solid #3d7a5a;
+    box-shadow: none;
+}
+
+.stat-value {
+    color: #1f2a27;
+}
+
+.row > :nth-child(4n+2) > .stat-card {
+    border-left-color: #1f2a27;
+}
+
+.row > :nth-child(4n+3) > .stat-card {
+    border-left-color: #b8902f;
+}
+
+.row > :nth-child(4n+4) > .stat-card {
+    border-left-color: #b85c45;
+}
+
+/* Buttons */
+.btn-primary {
+    --bs-btn-bg: #74404d;
+    --bs-btn-border-color: #74404d;
+    --bs-btn-hover-bg: #5e323e;
+    --bs-btn-hover-border-color: #5e323e;
+    --bs-btn-active-bg: #42232c;
+    --bs-btn-active-border-color: #42232c;
+    --bs-btn-disabled-bg: #74404d;
+    --bs-btn-disabled-border-color: #74404d;
+}
+
+.btn-outline-primary {
+    --bs-btn-color: #74404d;
+    --bs-btn-border-color: #74404d;
+    --bs-btn-hover-bg: #74404d;
+    --bs-btn-hover-border-color: #74404d;
+    --bs-btn-active-bg: #74404d;
+    --bs-btn-active-border-color: #74404d;
+    --bs-btn-disabled-color: #74404d;
+    --bs-btn-disabled-border-color: #74404d;
+}
+
+/* Form focus ring */
+.form-control:focus, .form-select:focus {
+    border-color: #a86c7b;
+    box-shadow: 0 0 0 0.25rem rgba(116, 64, 77, 0.2);
+}

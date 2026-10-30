@@ -1,0 +1,47 @@
+﻿@model Attendify.Models.AdminProfileViewModel
+@{ ViewData["Title"] = "My Profile"; }
+
+<h2 class="fw-bold mb-4">My profile</h2>
+
+@if (TempData["Success"] != null) { <div class="alert alert-success">@TempData["Success"]</div> }
+
+<div class="card shadow-sm border-0" style="border-radius:16px; max-width:720px;">
+    <div class="card-body p-4">
+        <form asp-action="Profile" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="form-label">First name</label>
+                    <input class="form-control bg-light" value="@Model.FirstName" readonly />
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Last name</label>
+                    <input class="form-control bg-light" value="@Model.LastName" readonly />
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="Email" class="form-label">Email</label>
+                    <input asp-for="Email" class="form-control" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="PhoneNumber" class="form-label">Phone number</label>
+                    <input asp-for="PhoneNumber" class="form-control" />
+                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                </div>
+            </div>
+
+            <hr class="my-4" />
+            <h6 class="text-muted mb-3">Account details (cannot be changed here)</h6>
+            <div class="row g-3">
+                <div class="col-md-6"><label class="form-label">Username</label><input class="form-control bg-light" value="@Model.Username" readonly /></div>
+                <div class="col-md-6"><label class="form-label">Employee number</label><input class="form-control bg-light" value="@Model.EmployeeNumber" readonly /></div>
+                <div class="col-md-6"><label class="form-label">Office number</label><input class="form-control bg-light" value="@Model.OfficeNumber" readonly /></div>
+                <div class="col-md-6"><label class="form-label">Institution</label><input class="form-control bg-light" value="@Model.InstitutionName" readonly /></div>
+            </div>
+
+            <div class="mt-4"><button type="submit" class="btn btn-primary px-4">Save changes</button></div>
+        </form>
+    </div>
+</div>
+
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

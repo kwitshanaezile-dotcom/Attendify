@@ -1,0 +1,48 @@
+﻿@model List<Attendify.Models.ModuleReportItem>
+@{
+    ViewData["Title"] = "Reports";
+}
+
+<h2 class="fw-bold mb-4">Attendance reports</h2>
+
+<div class="row g-3">
+    @foreach (var r in Model)
+    {
+        var avgBar = r.AvgRate >= 70 ? "bg-success" : r.AvgRate >= 50 ? "bg-warning" : "bg-danger";
+        <div class="col-md-6">
+            <div class="stat-card text-start">
+                <div class="text-primary fw-bold">@r.ModuleCode</div>
+                <div class="text-muted small mb-3">@r.ModuleName · @r.Students students</div>
+
+                @if (r.SessionsHeld == 0)
+                {
+                    <div class="text-muted">No classes have been held yet.</div>
+                }
+                else
+                {
+                    <div class="row text-center">
+                        <div class="col-4">
+                            <div class="stat-value">@r.SessionsHeld</div>
+                            <div class="stat-label">Classes held</div>
+                        </div>
+                        <div class="col-4">
+                            <div class="stat-value">@r.AvgRate%</div>
+                            <div class="stat-label">Average attendance</div>
+                        </div>
+                        <div class="col-4">
+                            <div class="stat-value" style="@(r.LowestRate < 70 ? "color:#b8402f" : "")">@r.LowestRate%</div>
+                            <div class="stat-label">Lowest class</div>
+                        </div>
+                    </div>
+                    <div class="progress mt-3" style="height:6px;">
+                        <div class="progress-bar @avgBar" style="width:@r.AvgRate%"></div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+    @if (!Model.Any())
+    {
+        <div class="col-12"><div class="alert alert-secondary">You have no modules assigned yet.</div></div>
+    }
+</div>

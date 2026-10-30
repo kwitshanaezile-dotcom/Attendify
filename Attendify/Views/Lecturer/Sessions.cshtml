@@ -1,0 +1,103 @@
+﻿@model Attendify.Models.LecturerSessionsViewModel
+@{
+    ViewData["Title"] = "Sessions";
+}
+
+<h2 class="fw-bold mb-4">Sessions</h2>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-warning">@TempData["Error"]</div>
+}
+
+<h5 class="fw-bold mb-3">Today's classes</h5>
+
+@foreach (var s in Model.Today)
+{
+    <div class="card shadow-sm mb-3" style="border-radius:16px;">
+        <div class="card-body d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <div>
+                <div class="d-flex align-items-center gap-2 mb-1">
+                    <strong class="text-primary">@s.ModuleCode</strong>
+                    @if (s.IsCancelled)
+                    {
+                        <span class="badge bg-danger">Cancelled</span>
+                    }
+                    else if (s.IsOpen)
+                    {
+                        <span class="badge bg-success">● Attendance open</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-secondary">Not open</span>
+                    }
+                </div>
+                <div>@s.ModuleName</div>
+                <div class="text-muted small">
+                    📍 @s.VenueName &nbsp;·&nbsp;
+                    🕒 @s.StartTime.ToString(@"hh\:mm") – @s.EndTime.ToString(@"hh\:mm") &nbsp;·&nbsp;
+                    ✔ @s.SignedIn of @s.Enrolled signed in
+                </div>
+            </div>
+
+            @if (!s.IsCancelled)
+            {
+                <div class="d-flex gap-2 flex-wrap">
+                    @if (s.IsOpen)
+                    {
+                        <form asp-action="CloseSession" asp-route-id="@s.SessionId" method="post">
+                            <button type="submit" class="btn btn-primary">Close attendance</button>
+                        </form>
+                    }
+                    else
+                    {
+                        <form asp-action="OpenSession" asp-route-id="@s.SessionId" method="post">
+                            <button type="submit" class="btn btn-primary">Open attendance</button>
+                        </form>
+                        <form asp-action="CancelSession" asp-route-id="@s.SessionId" method="post"
+                              onsubmit="return confirm('Cancel this class? Students will see it as cancelled.');">
+                            <button type="submit" class="btn btn-outline-danger">Cancel class</button>
+                        </form>
+                    }
+                    <a asp-action="Attendances" asp-route-sessionId="@s.SessionId"
+                       class="btn btn-outline-primary">View roster</a>
+                </div>
+            }
+        </div>
+    </div>
+}
+@if (!Model.Today.Any())
+{
+    <div class="alert alert-secondary mb-4">You have no classes scheduled for today.</div>
+}
+
+<h5 class="fw-bold mt-4 mb-3">Weekly timetable</h5>
+<div class="card shadow-sm border-0" style="border-radius:16px;">
+    <div class="table-responsive">
+        <table class="table align-middle mb-0">
+            <thead>
+                <tr><th>Day</th><th>Start</th><th>End</th><th>Module</th><th>Venue</th></tr>
+            </thead>
+            <tbody>
+                @foreach (var r in Model.Weekly)
+                {
+                    <tr class="@(r.IsToday ? "table-primary" : "")">
+                        <td><strong>@r.Day</strong></td>
+                        <td>@r.StartTime.ToString(@"hh\:mm")</td>
+                        <td>@r.EndTime.ToString(@"hh\:mm")</td>
+                        <td>@r.ModuleCode <span class="text-muted small d-none d-md-inline">· @r.ModuleName</span></td>
+                        <td>@r.VenueName</td>
+                    </tr>
+                }
+                @if (!Model.Weekly.Any())
+                {
+                    <tr><td colspan="5" class="text-center text-muted py-4">No classes on your timetable yet.</td></tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

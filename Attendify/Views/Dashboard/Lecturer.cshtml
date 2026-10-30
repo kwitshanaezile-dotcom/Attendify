@@ -1,0 +1,92 @@
+﻿@model Attendify.Models.LecturerDashboardViewModel
+@{
+    ViewData["Title"] = "Lecturer Dashboard";
+}
+
+<h2 class="fw-bold mb-4">Welcome, Lecturer @Model.LastName!</h2>
+
+@* ---------- Stat cards ---------- *@
+<div class="row g-3 mb-3">
+    <div class="col-md-4">
+        <div class="stat-card"><div class="stat-value">@Model.LiveSessions</div><div class="stat-label">Live sessions</div></div>
+    </div>
+    <div class="col-md-4">
+        <div class="stat-card"><div class="stat-value">@Model.ModuleCount</div><div class="stat-label">Modules taught</div></div>
+    </div>
+    <div class="col-md-4">
+        <div class="stat-card"><div class="stat-value">@Model.AvgRate%</div><div class="stat-label">Average attendance</div></div>
+    </div>
+</div>
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="stat-card"><div class="stat-value">@Model.SessionsToday</div><div class="stat-label">Sessions today</div></div>
+    </div>
+    <div class="col-md-4">
+        <div class="stat-card"><div class="stat-value">@Model.TotalStudents</div><div class="stat-label">Total students</div></div>
+    </div>
+    <div class="col-md-4">
+        <div class="stat-card"><div class="stat-value">@Model.SignedInLive</div><div class="stat-label">Signed in (live)</div></div>
+    </div>
+</div>
+
+<h5 class="fw-bold mb-3">Live session roster</h5>
+
+@if (!Model.LiveRosters.Any())
+{
+    <div class="alert alert-secondary d-flex justify-content-between align-items-center flex-wrap gap-2">
+        <span>No attendance session is open right now.</span>
+        <a asp-controller="Lecturer" asp-action="Sessions" class="btn btn-sm btn-primary">Go to Sessions</a>
+    </div>
+}
+
+@foreach (var g in Model.LiveRosters)
+{
+    <div class="card shadow-sm border-0 mb-4" style="border-radius:16px;">
+        <div class="card-body pb-0">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                <div>
+                    <span class="badge bg-success mb-1">● Attendance open</span>
+                    <h5 class="mb-0">@g.ModuleCode · @g.ModuleName</h5>
+                    <div class="text-muted small">
+                        📍 @g.VenueName &nbsp;·&nbsp;
+                        🕒 @g.StartTime.ToString(@"hh\:mm") – @g.EndTime.ToString(@"hh\:mm")
+                    </div>
+                </div>
+                <a asp-controller="Lecturer" asp-action="Sessions" class="btn btn-sm btn-outline-primary">Manage session</a>
+            </div>
+        </div>
+        <div class="table-responsive mt-3">
+            <table class="table align-middle mb-0">
+                <thead>
+                    <tr><th>Student number</th><th>Name</th><th>Signed in</th><th>Status</th></tr>
+                </thead>
+                <tbody>
+                    @foreach (var r in g.Rows)
+                    {
+                        var st = r.Status.ToLowerInvariant();
+                        var badge = st == "present" ? "bg-success"
+                                  : st == "late" ? "bg-warning text-dark"
+                                  : "bg-secondary";
+                        <tr>
+                            <td>@r.StudentNumber</td>
+                            <td>@r.FullName</td>
+                            <td>@(r.SigninTime.HasValue ? r.SigninTime.Value.ToString("HH:mm") : "—")</td>
+                            <td><span class="badge @badge">@r.Status</span></td>
+                        </tr>
+                    }
+                    @if (!g.Rows.Any())
+                    {
+                        <tr><td colspan="4" class="text-center text-muted py-4">No students are enrolled in this module.</td></tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    @if (Model.LiveRosters.Any())
+    {
+        <script>setTimeout(function () { location.reload(); }, 15000);</script>
+    }
+}

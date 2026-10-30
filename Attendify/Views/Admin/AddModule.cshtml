@@ -1,0 +1,37 @@
+﻿@model Attendify.Models.AddModuleViewModel
+@{ ViewData["Title"] = "Add module"; }
+
+<h2 class="fw-bold mb-4">Add module</h2>
+
+<div class="card shadow-sm border-0" style="border-radius:16px; max-width:640px;">
+    <div class="card-body p-4">
+        <form asp-action="AddModule" method="post">
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <label asp-for="ModuleCode" class="form-label">Module code</label>
+                    <input asp-for="ModuleCode" class="form-control" />
+                    <span asp-validation-for="ModuleCode" class="text-danger"></span>
+                </div>
+                <div class="col-md-8">
+                    <label asp-for="ModuleName" class="form-label">Module name</label>
+                    <input asp-for="ModuleName" class="form-control" />
+                    <span asp-validation-for="ModuleName" class="text-danger"></span>
+                </div>
+                <div class="col-12">
+                    <label asp-for="LecturerId" class="form-label">Lecturer</label>
+                    <select asp-for="LecturerId" asp-items="Model.Lecturers" class="form-select">
+                        <option value="">Select a lecturer…</option>
+                    </select>
+                    <span asp-validation-for="LecturerId" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="mt-4 d-flex gap-2">
+                <button type="submit" class="btn btn-primary px-4">Add module</button>
+                <a asp-action="Modules" class="btn btn-outline-primary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

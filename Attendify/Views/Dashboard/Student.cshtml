@@ -1,0 +1,115 @@
+﻿@model Attendify.Models.StudentDashboardViewModel
+@{
+    ViewData["Title"] = "Student Dashboard";
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-warning">@TempData["Error"]</div>
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-bold mb-0">Welcome, @Model.FirstName!</h2>
+</div>
+
+@if (Model.LiveSessions.Any())
+{
+    foreach (var s in Model.LiveSessions)
+    {
+        <div class="live-card mb-4">
+            <div>
+                <span class="badge bg-success mb-2">● Attendance open</span>
+                <h4 class="fw-bold mb-1">@s.ModuleCode · @s.ModuleName</h4>
+                <div class="opacity-75">
+                    📍 @s.VenueName &nbsp;·&nbsp; @s.StartTime.ToString(@"hh\:mm") – @s.EndTime.ToString(@"hh\:mm")
+                </div>
+            </div>
+            <div>
+                @if (s.AlreadySignedIn)
+                {
+                    <span class="badge bg-light text-success px-3 py-2">✔ Signed in</span>
+                }
+                else
+                {
+                    <a asp-controller="Attendance" asp-action="Mark" asp-route-id="@s.SessionId"
+                       class="btn btn-light btn-lg">Mark attendance</a>
+                }
+            </div>
+        </div>
+    }
+}
+else
+{
+    <div class="alert alert-secondary mb-4">
+        No class is open for attendance right now. When your lecturer opens a session, it will appear here.
+    </div>
+}
+
+<div class="row g-3 mb-4">
+    <div class="col-6 col-md-3">
+        <div class="stat-card"><div class="stat-value">@Model.AttendanceRate%</div><div class="stat-label">Attendance rate</div></div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="stat-card"><div class="stat-value">@Model.ModuleCount</div><div class="stat-label">Modules</div></div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="stat-card"><div class="stat-value">@Model.SessionsToday</div><div class="stat-label">Classes today</div></div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="stat-card"><div class="stat-value">@Model.SessionsAttended</div><div class="stat-label">Sessions attended</div></div>
+    </div>
+</div>
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h5 class="fw-bold mb-0">My Modules</h5>
+    <a asp-controller="Student" asp-action="MyAttendance" class="btn btn-sm btn-outline-primary">View all</a>
+</div>
+
+<div class="row g-3 mb-4">
+    @foreach (var m in Model.Modules)
+    {
+        <div class="col-md-4">
+            <div class="card feature-card shadow-sm h-100">
+                <div class="card-body">
+                    <div class="text-primary fw-bold">@m.ModuleCode</div>
+                    <div>@m.ModuleName</div>
+                </div>
+            </div>
+        </div>
+    }
+    @if (!Model.Modules.Any())
+    {
+        <div class="col-12 text-muted">You are not enrolled in any modules yet.</div>
+    }
+</div>
+
+<h5 class="fw-bold mb-3">Recent attendance</h5>
+<div class="card shadow-sm border-0" style="border-radius:16px;">
+    <div class="table-responsive">
+        <table class="table align-middle mb-0">
+            <thead>
+                <tr><th>Date</th><th>Module</th><th>Venue</th><th>Status</th></tr>
+            </thead>
+            <tbody>
+                @foreach (var r in Model.Recent)
+                {
+                    var st = r.Status.ToLowerInvariant();
+                    var badge = st == "present" ? "bg-success"
+                              : st == "late" ? "bg-warning text-dark"
+                              : "bg-danger";
+
+                    <tr>
+                        <td>@r.SessionDate.ToString("ddd, dd MMM yyyy")</td>
+                        <td>@r.ModuleCode</td>
+                        <td>@r.VenueName</td>
+                        <td><span class="badge @badge">@r.Status</span></td>
+                    </tr>
+                }
+                @if (!Model.Recent.Any())
+                {
+                    <tr><td colspan="4" class="text-muted text-center py-4">No attendance records yet.</td></tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
